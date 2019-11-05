@@ -1,0 +1,47 @@
+# Publish workflow.
+#
+# Only runs when:
+# 1. a PR is merged to master
+# 2. CHANGELOG.md has been modified
+
+name: Publish
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+    paths:
+      - 'CHANGELOG.md'
+
+env:
+  RUST_BACKTRACE: 1
+
+jobs:
+  publish:
+    name: Publish
+    # needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        if: github.event.pull_request.merged
+      - uses: actions-rs/toolchain@v1
+        if: github.event.pull_request.merged
+        with:
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        if: github.event.pull_request.merged
+        with:
+          command: login
+          args: ${{ secrets.CRATES_IO_TOKEN }}
+      - uses: actions-rs/cargo@v1
+        if: github.event.pull_request.merged
+        with:
+          command: package
+          args: --manifest-path=safe_core/Cargo.toml
+      - uses: actions-rs/cargo@v1
+        if: github.event.pull_request.merged
+        with:
+          command: publish
+          args: --manifest-path=safe_core/Cargo.toml --dry-run

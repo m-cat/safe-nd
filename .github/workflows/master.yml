@@ -1,0 +1,36 @@
+# Push to master workflow.
+#
+# Less strict than the PR workflow because checks have run already.
+
+name: Master
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+
+env:
+  RUST_BACKTRACE: 1
+
+jobs:
+  test:
+    name: Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    steps:
+      - uses: actions/checkout@v1
+        if: github.event.pull_request.merged
+      # TODO: Measure if any speedup from caching (no Cargo.lock, so always reuse cache)
+      - uses: actions-rs/toolchain@v1
+        if: github.event.pull_request.merged
+        with:
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        if: github.event.pull_request.merged
+        with:
+          command: test
+          args: --verbose --release
