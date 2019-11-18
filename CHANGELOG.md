@@ -1,5 +1,7 @@
 # safe-nd - Change Log
 
+Test
+
 ## [0.4.0]
 
 - Changed `AppPermissions` to include permissions for allowing mutations and getting a user's balance.
