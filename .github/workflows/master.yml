@@ -88,17 +88,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CUSTOM_TAG: ${{ steps.versioning.outputs.version }}
-      # Publish to crates.io.
-      - uses: actions-rs/cargo@v1
-        if: startsWith(steps.commit_message.outputs.commit_message, 'Version change')
-        with:
-          command: login
-          args: ${{ secrets.CRATES_IO_TOKEN }}
-      - uses: actions-rs/cargo@v1
-        if: startsWith(steps.commit_message.outputs.commit_message, 'Version change')
-        with:
-          command: package
-      - uses: actions-rs/cargo@v1
-        if: startsWith(steps.commit_message.outputs.commit_message, 'Version change')
-        with:
-          command: publish
+      # # Publish to crates.io.
+      # - uses: actions-rs/cargo@v1
+      #   if: startsWith(steps.commit_message.outputs.commit_message, 'Version change')
+      #   with:
+      #     command: login
+      #     args: ${{ secrets.CRATES_IO_TOKEN }}
+      # - uses: actions-rs/cargo@v1
+      #   if: startsWith(steps.commit_message.outputs.commit_message, 'Version change')
+      #   with:
+      #     command: package
+      # - uses: actions-rs/cargo@v1
+      #   if: startsWith(steps.commit_message.outputs.commit_message, 'Version change')
+      #   with:
+      #     command: publish
